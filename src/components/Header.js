@@ -45,7 +45,7 @@ const Header = () => {
       <nav className={`navbar ${isNavExpanded ? 'expanded' : ''}`}>
         <a href="/dashboard">Dashboard</a>
         <a href="/about">About</a>
-        <a href="/profile">Profile</a>
+        {/* <a href="/profile">Profile</a> */}
         <a href="/" onClick={() => handleLogout()}>Logout</a>
       </nav>
     </header>

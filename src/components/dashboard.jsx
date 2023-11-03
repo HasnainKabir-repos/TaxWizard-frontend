@@ -12,22 +12,28 @@ import jsPDF from 'jspdf';
 // };
   
 const gridContainerStyle = {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr', // Two columns of equal width
-    gap: '20px',
-    maxWidth: '1200px',
-    width: '100%', // Added width property
-    margin: 'auto',
-    padding: '15px',
-  };
-  
-  const pageWrapperStyle = {
-    display: 'grid', // Two columns taking up the whole page
-    width: '100vw', // Make it take the full width of the viewport
-    height: '100vh', // Make it take the full height of the viewport
-    margin: '0', // Remove any margin
-    background: '#7CABA1', // Background color
-  };
+  display: 'grid',
+  gap: '20px',
+  maxWidth: '600px',
+  maxHeight: '1000px',
+  width: '100%',
+  height: '60%',
+  margin: 'auto',
+  padding: '15px',
+  background: '#e9edeb',
+  // Dark green shadow
+};
+
+
+const pageWrapperStyle = {
+  display: 'grid',
+  width: '100vw',
+  height: '100vh',
+  margin: '0',
+  background: '#7CABA1',
+  boxShadow: '0px 4px 6px rgba(0, 128, 0, 0.2)', 
+};
+
   
 
 const columnStyle = {
@@ -36,6 +42,7 @@ const columnStyle = {
   padding: '20px',
   boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
   background: '#7CABA1', // Background colo
+
 };
 
 const inputStyle = {
@@ -179,7 +186,7 @@ console.log = (...messages) => {
               <option value="">Select Gender</option>
               <option value="female">Female</option>
               <option value="male">Male</option>
-              <option value="other">Other</option>
+
             </select>
           </div>
           <div>
@@ -191,14 +198,11 @@ console.log = (...messages) => {
               onChange={(e) => setSelectedLocation(e.target.value)}
             >
               <option value="">Select Location</option>
-              <option value="Barishal">Barishal</option>
-              <option value="Chattogram">Chattogram</option>
               <option value="Dhaka">Dhaka</option>
-              <option value="Khulna">Khulna</option>
-              <option value="Rajshahi">Rajshahi</option>
-              <option value="Rangpur">Rangpur</option>
-              <option value="Mymensingh">Mymensingh</option>
-              <option value="Sylhet">Sylhet</option>
+              <option value="Chattogram">Chattogram</option>
+             
+              
+              {/* <option value="Sylhet">Other</option> */}
             </select>
           </div>
           <button type="submit" style={buttonStyle} onClick={handleButtonClick}>
@@ -210,7 +214,7 @@ console.log = (...messages) => {
          <h2>Calculated Tax: BDT {calculatedTax}</h2>
         )}
       </div>
-      <div style={taxListStyle}>
+      {/* <div style={taxListStyle}>
         <h3 style={h1Style}>Calculated Taxes by Year</h3>
         <ul>
           {((record, index) => (
@@ -219,7 +223,7 @@ console.log = (...messages) => {
             </li>
           ))}
         </ul>
-      </div>
+      </div> */}
     </div>
 </div>
 </div>
