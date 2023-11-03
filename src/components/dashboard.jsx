@@ -88,18 +88,20 @@ const TaxDashboard = () => {
   const [taxRecords, setTaxRecords] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState('');
 
-  const calculateTax = (event) => {
+  const calculateTax = async (event) => {
     event.preventDefault();
 
     try{
       const data = {
-        token: localStorage.getItem("token"),
-        income: income,
+        token: JSON.parse(localStorage.getItem("token")),
+        income: Number(income),
         gender: gender,
         location: selectedLocation
       }
-      const response = axios.post("http://localhost:9000/api/calculatetax", data);
-      console.log(response);
+      const response = await axios.post("http://localhost:9000/api/calculatetax", data);
+      console.log(response.data);
+
+      setCalculatedTax(response.data.tax);
     } catch (error) {
       console.error("Error calculating tax", error);
     }
@@ -164,7 +166,7 @@ const TaxDashboard = () => {
           </button>
         </form>
         {calculatedTax !== null && (
-          <h2>Calculated Tax: ${calculatedTax.toFixed(2)}</h2>
+          <h2>Calculated Tax: ${calculatedTax}</h2>
         )}
       </div>
       <div style={taxListStyle}>
