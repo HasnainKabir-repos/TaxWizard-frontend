@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Header from './Header';
 import axios from 'axios';
+import jsPDF from 'jspdf';
 // const gridContainerStyle = {
 //   display: 'grid',
 //   gridTemplateColumns: '1fr 1fr',
@@ -85,28 +86,67 @@ const TaxDashboard = () => {
   const [income, setIncome] = useState('');
   const [gender, setGender] = useState('');
   const [calculatedTax, setCalculatedTax] = useState(null);
-  const [taxRecords, setTaxRecords] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState('');
+  let logMessages = []; // Moved outside to maintain state across renders
 
+  // Override console.log and capture messages
+  const originalConsoleLog = console.log;
+console.log = (...messages) => {
+  logMessages.push(messages.map(msg => typeof msg === 'object' ? JSON.stringify(msg) : msg).join(' '));
+  originalConsoleLog.apply(console, messages);
+};
+  // Function to generate PDF with captured logs
+  const generatePDF = () => {
+    const pdf = new jsPDF();
+  
+    // Add console log messages line by line
+    pdf.setFontSize(12);
+    logMessages.forEach((message, index) => {
+      pdf.text(message, 10, 10 + (10 * index));
+    });
+  
+    // Add page numbers as footer
+    const pageCount = pdf.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      pdf.setPage(i);
+      pdf.setFontSize(10);
+      pdf.text(`Page ${i} of ${pageCount}`, 190, pdf.internal.pageSize.height - 10);
+    }
+  
+    pdf.save('console_log.pdf');
+  };
+  
+  
   const calculateTax = async (event) => {
     event.preventDefault();
-
-    try{
+  
+    try {
       const data = {
         token: JSON.parse(localStorage.getItem("token")),
         income: Number(income),
         gender: gender,
         location: selectedLocation
-      }
+      };
+  
       const response = await axios.post("http://localhost:9000/api/calculatetax", data);
-      console.log(response.data);
-
-      setCalculatedTax(response.data.tax);
+      console.log(response.data); // This will be captured for the PDF
+  
+      setCalculatedTax(response.data.data.tax);
+      generatePDF(); // Generate the PDF
+      
+      
     } catch (error) {
       console.error("Error calculating tax", error);
     }
-
   };
+  const handleButtonClick = async (event) => {
+    await calculateTax(event); // Wait for calculateTax to finish
+    generatePDF(); // Generate the PDF containing console log messages
+  };
+  
+  
+
+
 
   return (
     <div>
@@ -161,18 +201,19 @@ const TaxDashboard = () => {
               <option value="Sylhet">Sylhet</option>
             </select>
           </div>
-          <button type="submit" style={buttonStyle} onClick={calculateTax}>
+          <button type="submit" style={buttonStyle} onClick={handleButtonClick}>
             Calculate Tax
           </button>
+        
         </form>
         {calculatedTax !== null && (
-          <h2>Calculated Tax: ${calculatedTax}</h2>
+         <h2>Calculated Tax: BDT {calculatedTax}</h2>
         )}
       </div>
       <div style={taxListStyle}>
         <h3 style={h1Style}>Calculated Taxes by Year</h3>
         <ul>
-          {taxRecords.map((record, index) => (
+          {((record, index) => (
             <li key={index}>
               Year: {record.year}, Tax: ${record.tax.toFixed(2)}, Location: {record.location}
             </li>
