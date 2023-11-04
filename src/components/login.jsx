@@ -19,7 +19,7 @@ function Login() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:9000/api/auth/login",
+        "https://taxwizard.azurewebsites.net/auth/login",
         formData
       );
       console.log(response);

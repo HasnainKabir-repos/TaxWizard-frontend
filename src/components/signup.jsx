@@ -67,7 +67,7 @@ function Signup() {
             return;
         }
         try {
-            const response = await axios.post('http://localhost:9000/api/auth/signup', formData);
+            const response = await axios.post('https://taxwizard.azurewebsites.net/auth/signup', formData);
             console.log(response.data);
             if (response.data) {
                 console.log("Signup successful!");

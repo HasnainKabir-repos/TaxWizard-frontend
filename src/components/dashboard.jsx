@@ -135,7 +135,7 @@ console.log = (...messages) => {
         location: selectedLocation
       };
   
-      const response = await axios.post("http://localhost:9000/api/calculatetax", data);
+      const response = await axios.post("https://taxwizard.azurewebsites.net/api/calculatetax", data);
       console.log(response.data); // This will be captured for the PDF
   
       setCalculatedTax(response.data.data.tax);
